@@ -1,13 +1,12 @@
 const Block = require('./block');
-const SHA256 = require('crypto-js/sha256');
 
 class Blockchain {
-    constructor(firstBlock) {
-        this.bloques = [this.addFirstBlock(firstBlock)];
+    constructor() {
+        this.bloques = [this.addFirstBlock()];
     }
 
-    addFirstBlock(firstBlock) {
-        return new Block(0, firstBlock);
+    addFirstBlock() {
+        return new Block(0, 'Genesis');
     }
 
     lastBlock() {
@@ -17,7 +16,10 @@ class Blockchain {
     addToBlockchain(data) {
         let prevBlock = this.lastBlock();
         let currentBlock = new Block(prevBlock.index + 1, data, prevBlock.hash);
-        if (currentBlock.hash !== prevBlock.hash) {
+        if (
+            currentBlock.hash !== prevBlock.hash &&
+            currentBlock.index > prevBlock.index
+        ) {
             this.bloques.push(currentBlock);
         }
     }
